@@ -22,6 +22,8 @@ class Game {
     this.height = height;
     this.currPlayer = currPlayer;
     this.board = board;
+    this.makeBoard();
+    this.makeHtmlBoard();
   }
 
   makeBoard() {
@@ -32,7 +34,7 @@ class Game {
 
   makeHtmlBoard() {
     const board = document.getElementById('board');
-
+    board.innerHTML = "";
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
@@ -40,7 +42,7 @@ class Game {
     for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement('td');
       headCell.setAttribute('id', x); //id change to not a num
-      headCell.addEventListener('click', this.handleClick);
+      headCell.addEventListener('click', this.handleClick.bind(this));
       top.append(headCell);
     }
 
@@ -49,7 +51,6 @@ class Game {
     // make main part of board
     for (let y = 0; y < this.height; y++) {
       const row = document.createElement('tr');
-
       for (let x = 0; x < this.width; x++) {
         const cell = document.createElement('td');
         cell.setAttribute('id', `c-${y}-${x}`);
@@ -74,7 +75,7 @@ class Game {
     piece.classList.add('piece');
     piece.classList.add(`p${this.currPlayer}`);
 
-    const spot = document.getElementById(`#c-${y}-${x}`);
+    const spot = document.getElementById(`c-${y}-${x}`);
     spot.append(piece);
   }
 
@@ -83,7 +84,7 @@ class Game {
   }
 
   handleClick(evt) {
-
+    console.log(`this keyword is`, this)
     // get x from ID of clicked cell
     const x = +evt.target.id;
     console.log("X is", x)
@@ -112,11 +113,11 @@ class Game {
   }
 
   checkForWin() {
+    console.log(`this keyword in checkForWin is`, this);
     function _win(cells) {
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
-
       return cells.every(
         ([y, x]) =>
           y >= 0 &&
@@ -137,7 +138,7 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+        if (_win(horiz).bind(this) || _win(vert).bind(this) || _win(diagDR).bind(this) || _win(diagDL).bind(this)) {
           return true;
         }
       }
@@ -145,7 +146,7 @@ class Game {
   }
 }
 
-const testGame = new Game(6, 7);
+//  new Game(6, 7);
 
 
 // const WIDTH = 7;
