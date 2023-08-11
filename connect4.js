@@ -116,21 +116,19 @@ class Game {
     console.log("this inside checkForWin()", this);
 
     const _win = (cells) => {
-      console.log("this inside _win", this);
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
 
       return cells.every(
-        ([y, x]) => {
+        ([y, x]) =>
           y >= 0 &&
           y < this.height &&
           x >= 0 &&
           x < this.width &&
           this.board[y][x] === this.currPlayer
-        }
       );
-    }
+    };
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
