@@ -15,12 +15,12 @@
 // remember to use "this" keyword
 // board: [];
 
-
+//TODO: remove board as parameter
 class Game {
-  constructor(height = 6, width = 7, currPlayer = 1, board = []) {
+  constructor(height = 6, width = 7, board = []) {
     this.width = width;
     this.height = height;
-    this.currPlayer = currPlayer;
+    this.currPlayer = 1;
     this.board = board;
     this.makeBoard();
     this.makeHtmlBoard();
@@ -35,6 +35,7 @@ class Game {
   makeHtmlBoard() {
     const board = document.getElementById('board');
     board.innerHTML = "";
+
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
@@ -84,10 +85,9 @@ class Game {
   }
 
   handleClick(evt) {
-    console.log(`this keyword is`, this)
     // get x from ID of clicked cell
     const x = +evt.target.id;
-    console.log("X is", x)
+
     // get next spot in column (if none, ignore click)
     const y = this.findSpotForCol(x);
     if (y === null) {
@@ -113,18 +113,22 @@ class Game {
   }
 
   checkForWin() {
-    console.log(`this keyword in checkForWin is`, this);
-    function _win(cells) {
+    console.log("this inside checkForWin()", this);
+
+    const _win = (cells) => {
+      console.log("this inside _win", this);
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
+
       return cells.every(
-        ([y, x]) =>
+        ([y, x]) => {
           y >= 0 &&
           y < this.height &&
           x >= 0 &&
           x < this.width &&
           this.board[y][x] === this.currPlayer
+        }
       );
     }
 
@@ -138,13 +142,14 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz).bind(this) || _win(vert).bind(this) || _win(diagDR).bind(this) || _win(diagDL).bind(this)) {
+        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
           return true;
         }
       }
     }
   }
 }
+
 
 //  new Game(6, 7);
 
